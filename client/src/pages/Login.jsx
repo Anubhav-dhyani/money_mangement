@@ -6,7 +6,7 @@ import api from '../api.js';
 import Logo from '../components/Logo.jsx';
 
 export default function Login() {
-  const [form, setForm] = useState({ email: 'admin@eventflow.local', password: 'Admin@123' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [show, setShow] = useState(false); const [loading, setLoading] = useState(false); const navigate = useNavigate();
   const submit = async (e) => {
     e.preventDefault(); setLoading(true);
@@ -24,11 +24,11 @@ export default function Login() {
       <small>© 2026 EventFlow. Built for focused teams.</small>
     </section>
     <section className="login-panel"><div className="login-card"><span className="eyebrow">ADMIN PORTAL</span><h2>Welcome back</h2><p>Enter your credentials to access the workspace.</p>
-      <form onSubmit={submit}>
-        <label>Email address<div className="input-wrap"><Mail size={18}/><input type="email" value={form.email} onChange={(e) => setForm({...form, email:e.target.value})} placeholder="admin@company.com" required/></div></label>
-        <label>Password<div className="input-wrap"><LockKeyhole size={18}/><input type={show?'text':'password'} value={form.password} onChange={(e) => setForm({...form, password:e.target.value})} required/><button type="button" onClick={() => setShow(!show)}>{show?<EyeOff size={18}/>:<Eye size={18}/>}</button></div></label>
+      <form onSubmit={submit} autoComplete="off">
+        <label>Email address<div className="input-wrap"><Mail size={18}/><input type="email" value={form.email} onChange={(e) => setForm({...form, email:e.target.value})} placeholder="admin@company.com" autoComplete="off" required/></div></label>
+        <label>Password<div className="input-wrap"><LockKeyhole size={18}/><input type={show?'text':'password'} value={form.password} onChange={(e) => setForm({...form, password:e.target.value})} autoComplete="new-password" required/><button type="button" onClick={() => setShow(!show)}>{show?<EyeOff size={18}/>:<Eye size={18}/>}</button></div></label>
         <button className="primary-btn login-btn" disabled={loading}>{loading ? 'Signing in…' : <>Sign in <ArrowRight size={18}/></>}</button>
-      </form><div className="demo-note"><span>Demo credentials are filled in for local setup.</span></div>
+      </form>
     </div></section>
   </div>;
 }
