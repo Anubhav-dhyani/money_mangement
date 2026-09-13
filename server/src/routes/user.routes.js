@@ -20,10 +20,11 @@ const normalize = (row) => ({
   bankName: clean(row['Bank Name'] ?? row.bankName)
 });
 const validate = (user) => {
-  const missing = Object.entries(user).filter(([, value]) => !value).map(([key]) => key);
+  const requiredFields = ['name', 'uniqueId', 'mobile', 'email', 'accountNumber', 'bankName'];
+  const missing = requiredFields.filter((key) => !user[key]);
   if (missing.length) return `Missing: ${missing.join(', ')}`;
   if (!/^\S+@\S+\.\S+$/.test(user.email)) return 'Invalid email address';
-  if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(user.ifscCode)) return 'Invalid IFSC code';
+  if (user.ifscCode && !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(user.ifscCode)) return 'Invalid IFSC code';
   return null;
 };
 

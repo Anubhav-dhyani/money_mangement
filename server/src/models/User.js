@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   mobile: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   accountNumber: { type: String, required: true, trim: true },
-  ifscCode: { type: String, required: true, trim: true, uppercase: true },
+  ifscCode: { type: String, trim: true, uppercase: true, default: '' },
   bankName: { type: String, required: true, trim: true }
 }, { timestamps: true });
 

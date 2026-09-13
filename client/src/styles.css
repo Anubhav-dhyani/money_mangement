@@ -36,3 +36,7 @@
   .login-card .login-btn{height:52px;border-radius:14px;background:#172127;box-shadow:0 12px 26px #17212724}
   .login-card .login-btn:hover{background:#2d424c}
 }
+
+.page-size{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;font-weight:600}.page-size select{padding:7px 28px 7px 10px;border-radius:9px;font-weight:700;color:var(--ink);background:#f8f9f6}.pagination{min-height:62px;padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);color:var(--muted);font-size:11px}.pagination>div{display:flex;align-items:center;gap:10px}.pagination strong{font-size:11px;color:#565b52}.pagination .icon-btn{width:34px;height:34px}.pagination .icon-btn:disabled{opacity:.35;cursor:not-allowed}
+
+@media(max-width:500px){.table-panel .panel-head{align-items:flex-end}.pagination{gap:10px;flex-direction:column;justify-content:center}.page-size{font-size:10px}}
