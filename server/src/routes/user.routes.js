@@ -84,10 +84,36 @@ router.post('/import', upload.single('file'), async (req, res) => {
     const error = validate(data);
     if (error) errors.push({ row: index + 2, error }); else valid.push({ row: index + 2, data });
   });
+  const existing = valid.length ? await User.find({
+    $or: [
+      { uniqueId: { $in: valid.map((item) => item.data.uniqueId) } },
+      { email: { $in: valid.map((item) => item.data.email) } }
+    ]
+  }).select('uniqueId email').lean() : [];
+  const seenIds = new Set(existing.map((user) => user.uniqueId));
+  const seenEmails = new Set(existing.map((user) => user.email));
+  const pending = [];
+  valid.forEach((item) => {
+    if (seenIds.has(item.data.uniqueId) || seenEmails.has(item.data.email)) {
+      errors.push({ row: item.row, error: 'Unique ID or email already exists' });
+      return;
+    }
+    seenIds.add(item.data.uniqueId);
+    seenEmails.add(item.data.email);
+    pending.push(item);
+  });
   let imported = 0;
-  for (const item of valid) {
-    try { await User.create(item.data); imported += 1; }
-    catch (error) { errors.push({ row: item.row, error: error.code === 11000 ? 'Unique ID or email already exists' : error.message }); }
+  if (pending.length) {
+    try {
+      const inserted = await User.insertMany(pending.map((item) => item.data), { ordered: false });
+      imported = inserted.length;
+    } catch (error) {
+      imported = error.insertedDocs?.length || 0;
+      (error.writeErrors || []).forEach((writeError) => {
+        const item = pending[writeError.index];
+        errors.push({ row: item?.row || 'unknown', error: writeError.code === 11000 ? 'Unique ID or email already exists' : writeError.errmsg });
+      });
+    }
   }
   res.status(errors.length && !imported ? 400 : 200).json({ message: `Imported ${imported} of ${rows.length} users.`, imported, failed: errors.length, errors: errors.slice(0, 100) });
 });
